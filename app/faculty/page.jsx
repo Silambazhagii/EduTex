@@ -5,28 +5,13 @@ import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import {
   Users, BookOpenCheck, ClipboardCheck, CalendarDays,
-  MessageSquare, FlaskConical, Bell,
+  MessageSquare, FlaskConical,
   FileBarChart, GraduationCap, Clock, ArrowUpRight,
-  Sparkles, Activity, CheckCircle2, Search, Play, X
+  Activity, CheckCircle2, Play, X
 } from "lucide-react";
 
 export default function FacultyDashboard() {
   const router = useRouter();
-
-  // ── Search ──
-  const [showSearch, setShowSearch] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
-
-  // ── Notifications ──
-  const [showNotifs, setShowNotifs] = useState(false);
-  const [notifs, setNotifs] = useState([
-    { id: 1, text: '12 evaluations pending review',   read: false },
-    { id: 2, text: 'Faculty meeting at 12:00 PM',     read: false },
-    { id: 3, text: 'New student request from Yaseen', read: false },
-    { id: 4, text: 'Research seminar at 3:30 PM',     read: true  },
-  ]);
-  const unreadCount = notifs.filter(n => !n.read).length;
-  const markAllRead = () => setNotifs(prev => prev.map(n => ({ ...n, read: true })));
 
   // ── Schedule ──
   const [schedule, setSchedule] = useState([
@@ -58,9 +43,6 @@ export default function FacultyDashboard() {
   // ── Rating ──
   const [ratingExpanded, setRatingExpanded] = useState(false);
 
-  // ── Profile ──
-  const [showProfile, setShowProfile] = useState(false);
-
   // ── Toast ──
   const [toast, setToast] = useState(null);
   const showToast = (msg) => {
@@ -81,136 +63,6 @@ export default function FacultyDashboard() {
       <main className="relative z-10 max-w-7xl mx-auto">
 
         {/* ══════════════════════════════════════
-            WELCOME HEADER
-        ══════════════════════════════════════ */}
-        <div className="mb-8 p-4 sm:p-6 bg-card/80 backdrop-blur-xl border border-dashed border-border rounded-2xl sm:rounded-3xl shadow-2xl">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div>
-              <motion.div
-                initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-accent text-accent-foreground border border-border shadow-sm mb-3"
-              >
-                <Sparkles className="w-3.5 h-3.5" />
-                <span className="text-[10px] font-bold uppercase tracking-widest">Senior Faculty</span>
-              </motion.div>
-              <motion.h1
-                initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
-                className="text-xl sm:text-2xl font-black text-foreground mb-1"
-              >
-                Good morning, <span className="text-primary">Ms. Raheema.</span>
-              </motion.h1>
-              <motion.p
-                initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
-                className="text-sm text-muted-foreground font-medium"
-              >
-                Next lecture in <span className="font-bold text-foreground">45 min · Block A</span>, 12 evaluations awaiting review.
-              </motion.p>
-            </div>
-
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.3 }}
-              className="flex items-center gap-3 self-start md:self-center"
-            >
-              {/* Search */}
-              <button
-                onClick={() => setShowSearch(s => !s)}
-                className="w-9 h-9 rounded-xl bg-secondary border border-border flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted transition-colors shadow-sm"
-              >
-                <Search className="w-4 h-4" />
-              </button>
-
-              {/* Bell */}
-              <div className="relative">
-                <button
-                  onClick={() => { setShowNotifs(s => !s); setShowProfile(false); }}
-                  className="w-9 h-9 rounded-xl bg-primary text-primary-foreground flex items-center justify-center shadow-md hover:bg-primary/90 transition-colors"
-                >
-                  <Bell className="w-4 h-4" />
-                </button>
-                {unreadCount > 0 && (
-                  <span className="absolute -top-1 -right-1 w-4 h-4 bg-destructive text-destructive-foreground rounded-full text-[9px] font-black flex items-center justify-center ring-2 ring-card">
-                    {unreadCount}
-                  </span>
-                )}
-                {showNotifs && (
-                  <div className="absolute right-0 top-12 w-72 bg-card border-2 border-border rounded-2xl shadow-2xl z-50 overflow-hidden">
-                    <div className="flex justify-between items-center px-4 py-3 border-b border-border">
-                      <span className="font-black text-sm text-foreground">Notifications</span>
-                      <button onClick={markAllRead} className="text-xs font-bold text-primary hover:underline">
-                        Mark all read
-                      </button>
-                    </div>
-                    {notifs.map(n => (
-                      <div
-                        key={n.id}
-                        className={`px-4 py-3 text-xs font-semibold border-b border-border last:border-0 flex items-start gap-2 ${
-                          n.read ? 'text-muted-foreground' : 'text-foreground bg-accent/40'
-                        }`}
-                      >
-                        <span className={`mt-0.5 w-2 h-2 rounded-full shrink-0 ${n.read ? 'bg-border' : 'bg-primary'}`} />
-                        {n.text}
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-
-              {/* Profile */}
-              <div className="relative">
-                <button
-                  onClick={() => { setShowProfile(s => !s); setShowNotifs(false); }}
-                  className="w-9 h-9 rounded-xl bg-primary text-primary-foreground flex items-center justify-center font-black text-sm shadow-md hover:bg-primary/90 transition-colors"
-                >
-                  R
-                </button>
-                {showProfile && (
-                  <div className="absolute right-0 top-12 w-56 bg-card border-2 border-border rounded-2xl shadow-2xl z-50 overflow-hidden">
-                    <div className="px-4 py-4 border-b border-border">
-                      <p className="font-black text-sm text-foreground">Ms. Raheema</p>
-                      <p className="text-xs text-muted-foreground mt-0.5">Senior Faculty · CS Dept</p>
-                    </div>
-                    {[
-                      { label: 'My Profile',  route: '/fac/profile'  },
-                      { label: 'My Classes',  route: '/fac/classes'  },
-                      { label: 'Settings',    route: '/fac/settings' },
-                      { label: 'Logout',      route: '/'             },
-                    ].map((item, i) => (
-                      <button
-                        key={i}
-                        onClick={() => { router.push(item.route); setShowProfile(false); }}
-                        className="w-full text-left px-4 py-2.5 text-sm font-semibold text-foreground hover:bg-accent transition-colors border-b border-border last:border-0"
-                      >
-                        {item.label}
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </motion.div>
-          </div>
-
-          {/* Expandable Search */}
-          {showSearch && (
-            <div className="mt-4 flex items-center gap-2 bg-background border-2 border-primary rounded-xl px-4 py-2">
-              <Search className="w-4 h-4 text-primary shrink-0" />
-              <input
-                autoFocus
-                type="text"
-                value={searchQuery}
-                onChange={e => setSearchQuery(e.target.value)}
-                placeholder="Search students, classes, assignments..."
-                className="bg-transparent text-sm text-foreground placeholder:text-muted-foreground focus:outline-none w-full"
-              />
-              {searchQuery && (
-                <button onClick={() => setSearchQuery('')}>
-                  <X className="w-4 h-4 text-muted-foreground hover:text-foreground" />
-                </button>
-              )}
-            </div>
-          )}
-        </div>
-
-        {/* ══════════════════════════════════════
             BENTO GRID
         ══════════════════════════════════════ */}
         <div className="grid grid-cols-1 md:grid-cols-12 gap-4 auto-rows-[100px] md:auto-rows-[110px]">
@@ -221,7 +73,7 @@ export default function FacultyDashboard() {
             className="md:col-span-4 row-span-5 card relative overflow-hidden flex flex-col !p-6 order-first"
           >
             <div className="flex justify-between items-center mb-6 shrink-0">
-              <h2 className="text-xl font-black text-primary">📅 Today&apos;s Timeline</h2>
+              <h2 className="text-xl font-black text-primary">Today&apos;s Timeline</h2>
               <button
                 onClick={() => router.push('/fac/calendar')}
                 className="w-8 h-8 rounded-xl bg-accent border border-border flex items-center justify-center hover:bg-muted transition-colors"
@@ -265,11 +117,11 @@ export default function FacultyDashboard() {
                           onClick={() => markDone(i)}
                           className="text-[10px] px-2 py-0.5 bg-accent border border-border rounded-lg font-bold text-muted-foreground hover:text-primary hover:border-primary transition-colors"
                         >
-                          ✓ Done
+                          Done
                         </button>
                       )}
                       {sch.done && (
-                        <span className="text-[10px] text-muted-foreground font-bold">✓ Done</span>
+                        <span className="text-[10px] text-muted-foreground font-bold">Done</span>
                       )}
                     </div>
                   </div>
