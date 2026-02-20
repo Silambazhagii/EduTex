@@ -1,19 +1,63 @@
-import { Bell, Search } from 'lucide-react'
+import { Bell, Search, ChevronDown } from 'lucide-react'
 import Image from 'next/image'
 import React from 'react'
 import { Button } from './ui/button'
 
 export default function Header() {
   return (
-    <div className="h-14 flex items-center justify-between px-3 md:px-6">
-      <Image src={"/logo.png"} height={200} width={200} alt='Logo edutex'  />
-      <div className="flex items-center gap-x-6">
-        <Button size='icon' variant='ghost'>
-          <Search size={20} className='text-accent-foreground' />
+    <div className="h-16 flex items-center justify-between px-4 md:px-8 bg-card/80 backdrop-blur-xl border-b border-border sticky top-2 z-40">
+
+      {/* ── Left: Logo ── */}
+      <Image
+        src="/logo.png"
+        height={200}
+        width={300}
+        alt="EduTex Logo"
+        className="object-contain"
+      />
+
+      {/* ── Center: Search Bar ── */}
+      <div className="hidden md:flex items-center gap-2 bg-background border border-border rounded-xl px-4 py-2 w-72 lg:w-96 group focus-within:border-primary transition-colors">
+        <Search size={15} className="text-muted-foreground group-focus-within:text-primary transition-colors shrink-0" />
+        <input
+          type="text"
+          placeholder="Search students, faculty, notices..."
+          className="bg-transparent text-sm text-foreground placeholder:text-muted-foreground focus:outline-none w-full"
+        />
+      </div>
+
+      {/* ── Right: Actions + Profile ── */}
+      <div className="flex items-center gap-2">
+
+        {/* Mobile Search */}
+        <Button size="icon" variant="ghost" className="md:hidden">
+          <Search size={18} className="text-accent-foreground" />
         </Button>
-        <Button size='icon' variant='ghost'>
-          <Bell size={20} className='text-accent-foreground' />
-        </Button>
+
+        {/* Notifications */}
+        <div className="relative">
+          <Button size="icon" variant="ghost" className="relative">
+            <Bell size={18} className="text-accent-foreground" />
+          </Button>
+          {/* Badge */}
+          <span className="absolute top-1 right-1 w-2 h-2 bg-destructive rounded-full ring-2 ring-card" />
+        </div>
+
+        {/* Divider */}
+        <div className="w-px h-6 bg-border mx-1 hidden sm:block" />
+
+        {/* Profile Chip */}
+        <button className="hidden sm:flex items-center gap-2.5 px-3 py-1.5 rounded-xl hover:bg-accent transition-colors group">
+          <div className="w-7 h-7 bg-primary rounded-lg flex items-center justify-center text-primary-foreground font-black text-xs shrink-0">
+            RS
+          </div>
+          <div className="text-left hidden lg:block">
+            <p className="text-xs font-bold text-foreground leading-tight">Dr. Rakesh Shetty</p>
+            <p className="text-[10px] text-muted-foreground leading-tight">HOD · CS</p>
+          </div>
+          <ChevronDown size={13} className="text-muted-foreground group-hover:text-foreground transition-colors hidden lg:block" />
+        </button>
+
       </div>
     </div>
   )
