@@ -1,4 +1,4 @@
-// app/fac/page.tsx
+// app/faculty/page.tsx
 "use client";
 
 import React, { useState } from "react";
@@ -66,14 +66,14 @@ export default function FacultyDashboard() {
 
   const [activeWorkspace, setActiveWorkspace] = useState<string | null>(null);
   const workspaceItems: WorkspaceItem[] = [
-    { n: "Classes",     i: Users,          route: "/fac/classes"     },
-    { n: "Assignments", i: BookOpenCheck,  route: "/fac/assignments" },
-    { n: "Attendance",  i: ClipboardCheck, route: "/fac/attendance"  },
-    { n: "Research",    i: FlaskConical,   route: "/fac/research"    },
-    { n: "Calendar",    i: CalendarDays,   route: "/fac/calendar"    },
-    { n: "Chat",        i: MessageSquare,  route: "/fac/chat"        },
-    { n: "Exams",       i: GraduationCap,  route: "/fac/exams"       },
-    { n: "Reports",     i: FileBarChart,   route: "/fac/reports"     },
+    { n: "Classes",     i: Users,          route: "/faculty/classes"     },
+    { n: "Assignments", i: BookOpenCheck,  route: "/faculty/assignments" },
+    { n: "Attendance",  i: ClipboardCheck, route: "/faculty/attendance"  },
+    { n: "Research",    i: FlaskConical,   route: "/faculty/research"    },
+    { n: "Calendar",    i: CalendarDays,   route: "/faculty/calendar"    },
+    { n: "Chat",        i: MessageSquare,  route: "/faculty/chat"        },
+    { n: "Exams",       i: GraduationCap,  route: "/faculty/exams"       },
+    { n: "Reports",     i: FileBarChart,   route: "/faculty/reports"     },
   ];
 
   const [evalDismissed, setEvalDismissed] = useState(false);
@@ -164,7 +164,7 @@ export default function FacultyDashboard() {
                   </p>
                 </div>
                 <button
-                  onClick={() => router.push("/fac/calendar")}
+                  onClick={() => router.push("/faculty/calendar")}
                   className="w-9 h-9 rounded-xl bg-accent border border-border flex items-center justify-center hover:bg-muted hover:border-primary/30 transition-all"
                 >
                   <ArrowUpRight className="w-4 h-4 text-muted-foreground" />
@@ -234,7 +234,7 @@ export default function FacultyDashboard() {
               <motion.div
                 initial={{ opacity: 0, scale: 0.97 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.2 }}
                 className="tile flex items-center gap-4 cursor-pointer hover:border-destructive/50 hover:shadow-lg transition-all duration-300 !p-5 border-destructive/20 group"
-                onClick={() => router.push("/fac/evaluations")}
+                onClick={() => router.push("/faculty/evaluations")}
               >
                 <div className="w-12 h-12 rounded-2xl bg-destructive/10 border border-destructive/20 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
                   <Activity className="w-5 h-5 text-destructive" />
@@ -346,7 +346,7 @@ export default function FacultyDashboard() {
                   </div>
                 </div>
                 <button
-                  onClick={() => router.push("/fac/notices")}
+                  onClick={() => router.push("/faculty/notices")}
                   className="flex items-center gap-1.5 px-3 py-2 bg-secondary border border-border rounded-xl text-xs font-bold text-secondary-foreground hover:bg-muted transition-all"
                 >
                   View All <ChevronRight size={13} />
