@@ -3,21 +3,37 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
 model User {
-  id          String   @id @default(cuid())
+  id          String     @id @default(cuid())
   name        String
-  email       String?  @unique
+  email       String?    @unique
   password    String
-  role        String   // "SUPERADMIN", "HOD", "FACULTY", "STUDENT"
-  status      String   @default("Approved") // "Pending", "Approved", "Rejected"
-  usn         String?  @unique
+  role        String     // "SUPERADMIN", "HOD", "FACULTY", "STUDENT"
+  status      String     @default("Approved") // "Pending", "Approved", "Rejected"
+  usn         String?    @unique
   semester    String?
   collegeName String?
   department  String?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  documents   Document[]
+}
+
+model Document {
+  id          String   @id @default(cuid())
+  title       String
+  fileUrl     String
+  format      String   // PDF, PPTX, DOCX, JPG
+  semester    String
+  subject     String
+  unit        String
+  status      String   @default("Pending") // "Pending", "Approved", "Rejected"
+  uploaderId  String
+  uploader    User     @relation(fields: [uploaderId], references: [id])
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
