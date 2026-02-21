@@ -53,42 +53,43 @@ export default function EduTexAdminDashboard() {
       },
     },
     { id: 2, title: 'SOP Annual Day 2K26', body: 'New approval workflow is now live from Feb 18.', date: 'Feb 18' },
-    { id: 3, title: 'Timetable Update',     body: 'Updated timetable published – check your schedule.', date: 'Feb 17' },
-    { id: 4, title: 'Exam Duty',            body: 'Exam duty assignments published for March 2026.', date: 'Feb 16' },
+    { id: 3, title: 'Timetable Update', body: 'Updated timetable published – check your schedule.', date: 'Feb 17' },
+    { id: 4, title: 'Exam Duty', body: 'Exam duty assignments published for March 2026.', date: 'Feb 16' },
   ]);
 
   const [requests, setRequests] = useState<FacultyRequest[]>([
-    { id: 1, name: 'Prof. Priya Sharma', type: 'Leave Request',    status: 'Pending', date: 'Feb 20 · 10:30 AM', desc: '3 days medical leave for family emergency' },
-    { id: 2, name: 'Dr. Rahul Mehta',    type: 'Class Reschedule', status: 'Pending', date: 'Feb 19 · 2:15 PM',  desc: 'Lab session moved to next Monday'          },
-    { id: 3, name: 'Ms. Anjali Rao',     type: 'Resource Request', status: 'Pending', date: 'Feb 18 · 9:00 AM',  desc: 'Projector for seminar hall – Feb 22'       },
-    { id: 4, name: 'Dr. Suresh Kumar',   type: 'Leave Request',    status: 'Pending', date: 'Feb 17 · 11:00 AM', desc: '1 day personal leave – Feb 21'             },
-    { id: 5, name: 'Prof. Nisha Verma',  type: 'Class Reschedule', status: 'Pending', date: 'Feb 16 · 4:00 PM',  desc: 'Theory class moved to Thursday slot'       },
+    { id: 1, name: 'Prof. Priya Sharma', type: 'Leave Request', status: 'Pending', date: 'Feb 20 · 10:30 AM', desc: '3 days medical leave for family emergency' },
+    { id: 2, name: 'Dr. Rahul Mehta', type: 'Class Reschedule', status: 'Pending', date: 'Feb 19 · 2:15 PM', desc: 'Lab session moved to next Monday' },
+    { id: 3, name: 'Ms. Anjali Rao', type: 'Resource Request', status: 'Pending', date: 'Feb 18 · 9:00 AM', desc: 'Projector for seminar hall – Feb 22' },
+    { id: 4, name: 'Dr. Suresh Kumar', type: 'Leave Request', status: 'Pending', date: 'Feb 17 · 11:00 AM', desc: '1 day personal leave – Feb 21' },
+    { id: 5, name: 'Prof. Nisha Verma', type: 'Class Reschedule', status: 'Pending', date: 'Feb 16 · 4:00 PM', desc: 'Theory class moved to Thursday slot' },
   ]);
 
   const [uploads, setUploads] = useState<Upload[]>([
-    { id: 1, studentName: 'Yaseen Mohammed', fileName: 'ML_Assignment_Unit3.pdf',  fileUrl: '', fileType: 'application/pdf', subject: 'Machine Learning',  uploadedAt: 'Feb 20 · 11:00 AM', status: 'Pending'  },
-    { id: 2, studentName: 'Ayesha Siddiqui', fileName: 'DataStructures_Notes.pdf', fileUrl: '', fileType: 'application/pdf', subject: 'Data Structures',   uploadedAt: 'Feb 20 · 9:45 AM',  status: 'Pending'  },
-    { id: 3, studentName: 'Rohan Patel',      fileName: 'random_meme.png',          fileUrl: '', fileType: 'image/png',       subject: 'Computer Networks', uploadedAt: 'Feb 19 · 3:20 PM',  status: 'Pending'  },
-    { id: 4, studentName: 'Sneha Kulkarni',   fileName: 'OS_Lab_Report.pdf',        fileUrl: '', fileType: 'application/pdf', subject: 'Operating Systems', uploadedAt: 'Feb 18 · 1:10 PM',  status: 'Approved' },
-    { id: 5, studentName: 'Aditya Nair',      fileName: 'Spam_File_123.pdf',        fileUrl: '', fileType: 'application/pdf', subject: 'Unknown',           uploadedAt: 'Feb 17 · 5:00 PM',  status: 'Rejected' },
+    { id: 1, studentName: 'Yaseen Mohammed', fileName: 'ML_Assignment_Unit3.pdf', fileUrl: '', fileType: 'application/pdf', subject: 'Machine Learning', uploadedAt: 'Feb 20 · 11:00 AM', status: 'Pending' },
+    { id: 2, studentName: 'Ayesha Siddiqui', fileName: 'DataStructures_Notes.pdf', fileUrl: '', fileType: 'application/pdf', subject: 'Data Structures', uploadedAt: 'Feb 20 · 9:45 AM', status: 'Pending' },
+    { id: 3, studentName: 'Rohan Patel', fileName: 'random_meme.png', fileUrl: '', fileType: 'image/png', subject: 'Computer Networks', uploadedAt: 'Feb 19 · 3:20 PM', status: 'Pending' },
+    { id: 4, studentName: 'Sneha Kulkarni', fileName: 'OS_Lab_Report.pdf', fileUrl: '', fileType: 'application/pdf', subject: 'Operating Systems', uploadedAt: 'Feb 18 · 1:10 PM', status: 'Approved' },
+    { id: 5, studentName: 'Aditya Nair', fileName: 'Spam_File_123.pdf', fileUrl: '', fileType: 'application/pdf', subject: 'Unknown', uploadedAt: 'Feb 17 · 5:00 PM', status: 'Rejected' },
   ]);
 
-  const [activeTab, setActiveTab]       = useState<'requests' | 'uploads'>('requests');
+  const [activeTab, setActiveTab] = useState<'requests' | 'uploads'>('requests');
   const [showAddModal, setShowAddModal] = useState(false);
-  const [newTitle, setNewTitle]         = useState('');
-  const [newBody, setNewBody]           = useState('');
-  const [newFile, setNewFile]           = useState<File | null>(null);
-  const fileRef                         = useRef<HTMLInputElement>(null);
-  const [viewNotice, setViewNotice]     = useState<Notice | null>(null);
-  const [viewUpload, setViewUpload]     = useState<Upload | null>(null);
+  const [showFacultyModal, setShowFacultyModal] = useState(false);
+  const [newTitle, setNewTitle] = useState('');
+  const [newBody, setNewBody] = useState('');
+  const [newFile, setNewFile] = useState<File | null>(null);
+  const fileRef = useRef<HTMLInputElement>(null);
+  const [viewNotice, setViewNotice] = useState<Notice | null>(null);
+  const [viewUpload, setViewUpload] = useState<Upload | null>(null);
 
   const shortcuts = [
-    { label: 'Reschedule', icon: <RefreshCw size={18} />,      route: '/reschedule' },
-    { label: 'Timetable',  icon: <Calendar size={18} />,       route: '/timetable'  },
+    { label: 'Add Faculty', icon: <Users size={18} />, action: () => setShowFacultyModal(true) },
+    { label: 'Reschedule', icon: <RefreshCw size={18} />, route: '/reschedule' },
+    { label: 'Timetable', icon: <Calendar size={18} />, route: '/timetable' },
     { label: 'Attendance', icon: <ClipboardCheck size={18} />, route: '/attendance' },
-    { label: 'Reports',    icon: <BarChart2 size={18} />,      route: '/reports'    },
-    { label: 'Students',   icon: <Users size={18} />,          route: '/students'   },
-    { label: 'Room Book',  icon: <DoorOpen size={18} />,       route: '/rooms'      },
+    { label: 'Reports', icon: <BarChart2 size={18} />, route: '/reports' },
+    { label: 'Room Book', icon: <DoorOpen size={18} />, route: '/rooms' },
   ];
 
   const handleRequestAction = (id: number, action: 'Approved' | 'Rejected') =>
@@ -111,12 +112,12 @@ export default function EduTexAdminDashboard() {
   };
 
   const pendingRequests = requests.filter(r => r.status === 'Pending').length;
-  const pendingUploads  = uploads.filter(u => u.status === 'Pending').length;
+  const pendingUploads = uploads.filter(u => u.status === 'Pending').length;
 
   const statusStyle = (status: string) =>
     status === 'Approved' ? 'bg-primary/10 text-primary border-primary/30' :
-    status === 'Rejected' ? 'bg-destructive/10 text-destructive border-destructive/20' :
-                            'bg-accent text-accent-foreground border-border';
+      status === 'Rejected' ? 'bg-destructive/10 text-destructive border-destructive/20' :
+        'bg-accent text-accent-foreground border-border';
 
   return (
     <div className="min-h-screen dotgrid bg-gradient-to-br from-background via-accent/30 to-background p-4 sm:p-6 lg:p-8 font-sans">
@@ -129,10 +130,10 @@ export default function EduTexAdminDashboard() {
           <span className="text-xs font-black text-muted-foreground uppercase tracking-widest mr-1">Overview</span>
           <div className="w-px h-4 bg-border mx-1" />
           {[
-            { icon: <Bell size={13} />,         num: notices.length,                                       label: 'Notices'         },
-            { icon: <Clock size={13} />,         num: requests.filter(r => r.status === 'Pending').length,  label: 'Req. Pending'    },
-            { icon: <CheckCircle size={13} />,   num: requests.filter(r => r.status === 'Approved').length, label: 'Req. Approved'   },
-            { icon: <Upload size={13} />,        num: pendingUploads,                                        label: 'Uploads Pending' },
+            { icon: <Bell size={13} />, num: notices.length, label: 'Notices' },
+            { icon: <Clock size={13} />, num: requests.filter(r => r.status === 'Pending').length, label: 'Req. Pending' },
+            { icon: <CheckCircle size={13} />, num: requests.filter(r => r.status === 'Approved').length, label: 'Req. Approved' },
+            { icon: <Upload size={13} />, num: pendingUploads, label: 'Uploads Pending' },
           ].map((stat, i) => (
             <div key={i} className="flex items-center gap-1.5 px-3 py-1 bg-accent/60 border border-border rounded-xl">
               <span className="text-muted-foreground">{stat.icon}</span>
@@ -158,11 +159,10 @@ export default function EduTexAdminDashboard() {
             <div className="flex gap-2 mb-6 pb-4 border-b-2 border-dashed border-border">
               <button
                 onClick={() => setActiveTab('requests')}
-                className={`flex items-center gap-2 px-4 py-2 rounded-xl font-bold text-sm transition-all ${
-                  activeTab === 'requests'
+                className={`flex items-center gap-2 px-4 py-2 rounded-xl font-bold text-sm transition-all ${activeTab === 'requests'
                     ? 'bg-primary text-primary-foreground shadow-md'
                     : 'bg-secondary text-secondary-foreground hover:bg-muted'
-                }`}
+                  }`}
               >
                 <Users size={14} />
                 Faculty Requests
@@ -175,11 +175,10 @@ export default function EduTexAdminDashboard() {
 
               <button
                 onClick={() => setActiveTab('uploads')}
-                className={`flex items-center gap-2 px-4 py-2 rounded-xl font-bold text-sm transition-all ${
-                  activeTab === 'uploads'
+                className={`flex items-center gap-2 px-4 py-2 rounded-xl font-bold text-sm transition-all ${activeTab === 'uploads'
                     ? 'bg-primary text-primary-foreground shadow-md'
                     : 'bg-secondary text-secondary-foreground hover:bg-muted'
-                }`}
+                  }`}
               >
                 <FileText size={14} />
                 Review Uploads
@@ -378,7 +377,13 @@ export default function EduTexAdminDashboard() {
               {shortcuts.map((item, i) => (
                 <button
                   key={i}
-                  onClick={() => router.push(item.route)}
+                  onClick={() => {
+                    if (item.action) {
+                      item.action();
+                    } else if (item.route) {
+                      router.push(item.route);
+                    }
+                  }}
                   className="bg-primary hover:bg-primary/90 text-primary-foreground py-3 sm:py-4 px-3 rounded-2xl font-bold text-xs sm:text-sm shadow-md hover:shadow-lg hover:scale-[1.03] active:scale-[0.97] transition-all duration-150 flex flex-col items-center gap-1.5"
                 >
                   {item.icon}
@@ -554,6 +559,90 @@ export default function EduTexAdminDashboard() {
                 <span className="text-xs mt-1 block">Connect to your storage backend to enable preview.</span>
               </div>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* ══════════════════════════════════════
+          MODAL: Add Faculty
+      ══════════════════════════════════════ */}
+      {showFacultyModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-foreground/20 backdrop-blur-sm" onClick={() => setShowFacultyModal(false)}>
+          <div className="bg-card border-2 border-border rounded-3xl shadow-2xl w-full max-w-lg p-6 sm:p-8" onClick={e => e.stopPropagation()}>
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl font-black text-primary flex items-center gap-2">
+                <Users size={24} /> Add Faculty
+              </h2>
+              <button onClick={() => setShowFacultyModal(false)} className="text-muted-foreground hover:text-foreground transition-colors">
+                <X size={22} />
+              </button>
+            </div>
+
+            <form action={async (formData) => {
+              const { addFaculty } = await import('@/app/actions/faculty');
+              const res = await addFaculty(formData);
+              if (res?.success) {
+                setShowFacultyModal(false);
+                alert("Faculty added successfully!");
+              } else {
+                alert(res?.error || "Error adding faculty");
+              }
+            }}>
+              <div className="space-y-4 mb-6">
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-muted-foreground mb-1 ml-1">Full Name</label>
+                  <input
+                    name="name"
+                    type="text"
+                    required
+                    placeholder="Prof. Jenkins"
+                    className="w-full p-3 bg-background border-2 border-border rounded-xl text-sm font-semibold focus:outline-none focus:border-primary transition-colors"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-muted-foreground mb-1 ml-1">Email Address</label>
+                  <input
+                    name="email"
+                    type="email"
+                    required
+                    placeholder="jenkins@college.edu"
+                    className="w-full p-3 bg-background border-2 border-border rounded-xl text-sm font-semibold focus:outline-none focus:border-primary transition-colors"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-muted-foreground mb-1 ml-1">Department</label>
+                  <input
+                    name="department"
+                    type="text"
+                    required
+                    placeholder="Computer Science"
+                    className="w-full p-3 bg-background border-2 border-border rounded-xl text-sm font-semibold focus:outline-none focus:border-primary transition-colors"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-muted-foreground mb-1 ml-1">Temporary Password</label>
+                  <input
+                    name="password"
+                    type="password"
+                    required
+                    placeholder="••••••••"
+                    className="w-full p-3 bg-background border-2 border-border rounded-xl text-sm font-semibold focus:outline-none focus:border-primary transition-colors"
+                  />
+                </div>
+              </div>
+
+              <div className="flex gap-3">
+                <button type="button" onClick={() => setShowFacultyModal(false)} className="flex-1 bg-secondary hover:bg-muted text-secondary-foreground py-3 rounded-xl font-semibold transition-all">
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="flex-1 flex items-center justify-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground py-3 rounded-xl font-bold transition-all shadow-md"
+                >
+                  <CheckCircle size={15} /> Add Faculty
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}
