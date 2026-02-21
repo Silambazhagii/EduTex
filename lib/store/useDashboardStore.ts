@@ -52,10 +52,18 @@ export type AttendanceRecord = {
 };
 
 // --- Mock Initial Data ---
+const dummyNames = [
+  "Alice Johnson", "Bob Smith", "Charlie Davis", "Diana Evans", "Ethan Harris",
+  "Fiona Green", "George White", "Hannah Black", "Ian Gray", "Julia King",
+  "Kevin Wright", "Laura Scott", "Michael Adams", "Nina Baker", "Oliver Carter",
+  "Paula Clark", "Quinn Hughes", "Rachel Lewis", "Sam Nelson", "Tina Perez",
+  "Uma Reed", "Victor Brooks", "Wendy Cook", "Xavier Ward", "Yara Bell", "Zack Ross"
+];
+
 const generateMockStudents = (count: number): StudentAttendance[] => {
   return Array.from({ length: count }, (_, i) => ({
     studentId: `STU${1000 + i}`,
-    name: `Student ${String.fromCharCode(65 + (i % 26))} ${i + 1}`,
+    name: dummyNames[i % dummyNames.length],
     isPresent: Math.random() > 0.15 // 85% chance of being present initially
   }));
 };
@@ -184,7 +192,7 @@ export const useDashboardStore = create<DashboardState>()(
       }))
     }),
     {
-      name: 'edutex-faculty-storage-v4', // Force refresh mock data key
+      name: 'edutex-faculty-storage-v5', // Force refresh mock data key
     }
   )
 );

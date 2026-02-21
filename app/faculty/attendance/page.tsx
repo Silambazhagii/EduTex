@@ -1,15 +1,25 @@
 "use client";
 
 import { useDashboardStore } from "@/lib/store/useDashboardStore";
-import { ClipboardCheck, Percent, Users } from "lucide-react";
-import { useState } from "react";
+import { ClipboardCheck, Percent, Users, Search } from "lucide-react";
+import { useState, useMemo } from "react";
 
 export default function AttendancePage() {
   const { classes, attendance, toggleStudentAttendance } = useDashboardStore();
   const [selectedClassId, setSelectedClassId] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const selectedClass = classes.find((c) => c.id === selectedClassId);
   const selectedRecord = attendance.find((a) => a.classId === selectedClassId);
+
+  const filteredStudents = useMemo(() => {
+    if (!selectedRecord?.students) return [];
+    if (!searchQuery.trim()) return selectedRecord.students;
+    return selectedRecord.students.filter(student => 
+      student.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+      student.studentId.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  }, [selectedRecord?.students, searchQuery]);
 
   return (
     <div className="space-y-6 max-w-6xl mx-auto">
@@ -62,12 +72,24 @@ export default function AttendancePage() {
 
       {selectedClassId && selectedClass && selectedRecord && (
         <div className="mt-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 gap-4">
             <h2 className="text-2xl font-bold tracking-tight">
               {selectedClass.name} <span className="text-muted-foreground font-medium text-lg ml-2">({selectedClass.code})</span>
             </h2>
-            <div className="text-sm font-medium text-muted-foreground bg-card border border-border/50 px-4 py-2 rounded-full shadow-sm">
-              <span className="text-foreground font-bold">{selectedRecord.students.filter(s => s.isPresent).length}</span> / {selectedRecord.students.length} Present
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 w-full sm:w-auto">
+              <div className="relative w-full sm:w-64">
+                <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                <input 
+                  type="text" 
+                  placeholder="Search student..." 
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="bg-card border border-border/60 rounded-xl pl-9 pr-4 py-2 text-sm focus:ring-2 focus:ring-primary/20 outline-none w-full shadow-sm"
+                />
+              </div>
+              <div className="text-sm font-medium text-muted-foreground bg-card border border-border/50 px-4 py-2 rounded-xl shadow-sm whitespace-nowrap">
+                <span className="text-foreground font-bold">{selectedRecord.students.filter(s => s.isPresent).length}</span> / {selectedRecord.students.length} Present
+              </div>
             </div>
           </div>
           
@@ -83,7 +105,7 @@ export default function AttendancePage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {selectedRecord.students?.map((student) => (
+                  {filteredStudents.map((student) => (
                     <tr key={student.studentId} className="border-b border-border/40 last:border-0 hover:bg-muted/10 transition-colors">
                       <td className="py-4 px-6 text-sm font-medium text-muted-foreground">{student.studentId}</td>
                       <td className="py-4 px-6 text-sm font-medium text-foreground">{student.name}</td>
