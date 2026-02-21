@@ -7,26 +7,42 @@ import {
   Users, BookOpenCheck, ClipboardCheck, CalendarDays,
   MessageSquare, FlaskConical,
   FileBarChart, GraduationCap, Clock, ArrowUpRight,
-  Activity, CheckCircle2, Play, X
+  Activity, CheckCircle2, Play, X,
+  LucideIcon
 } from "lucide-react";
+
+interface ScheduleItem {
+  time: string;
+  md: string;
+  title: string;
+  rm: string;
+  active: boolean;
+  done: boolean;
+}
+
+interface WorkspaceItem {
+  n: string;
+  i: LucideIcon;
+  route: string;
+}
 
 export default function FacultyDashboard() {
   const router = useRouter();
 
   // ── Schedule ──
-  const [schedule, setSchedule] = useState([
+  const [schedule, setSchedule] = useState<ScheduleItem[]>([
     { time: "09:00", md: "AM", title: "BCA Software Eng",   rm: "302",        active: false, done: false },
     { time: "10:15", md: "AM", title: "Project Mentoring",  rm: "Lab 4",      active: true,  done: false },
     { time: "12:00", md: "PM", title: "Faculty Meeting",    rm: "Conf. B",    active: false, done: false },
     { time: "02:00", md: "PM", title: "Integration Review", rm: "Virtual",    active: false, done: false },
     { time: "03:30", md: "PM", title: "Research Seminar",   rm: "Auditorium", active: false, done: false },
   ]);
-  const markDone = (i) =>
+  const markDone = (i: number) =>
     setSchedule(prev => prev.map((s, idx) => idx === i ? { ...s, done: true, active: false } : s));
 
   // ── Workspace ──
-  const [activeWorkspace, setActiveWorkspace] = useState(null);
-  const workspaceItems = [
+  const [activeWorkspace, setActiveWorkspace] = useState<string | null>(null);
+  const workspaceItems: WorkspaceItem[] = [
     { n: "Classes",     i: Users,          route: "/fac/classes"     },
     { n: "Assignments", i: BookOpenCheck,  route: "/fac/assignments" },
     { n: "Attendance",  i: ClipboardCheck, route: "/fac/attendance"  },
@@ -44,8 +60,8 @@ export default function FacultyDashboard() {
   const [ratingExpanded, setRatingExpanded] = useState(false);
 
   // ── Toast ──
-  const [toast, setToast] = useState(null);
-  const showToast = (msg) => {
+  const [toast, setToast] = useState<string | null>(null);
+  const showToast = (msg: string) => {
     setToast(msg);
     setTimeout(() => setToast(null), 2000);
   };
@@ -193,7 +209,7 @@ export default function FacultyDashboard() {
                     Urgent
                   </span>
                   <button
-                    onClick={e => { e.stopPropagation(); setEvalDismissed(true); }}
+                    onClick={(e: React.MouseEvent) => { e.stopPropagation(); setEvalDismissed(true); }}
                     className="w-6 h-6 rounded-lg bg-destructive/10 border border-destructive/20 flex items-center justify-center hover:bg-destructive/20 transition-colors"
                   >
                     <X className="w-3 h-3 text-destructive" />
