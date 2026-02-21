@@ -4,25 +4,29 @@ const bcrypt = require("bcryptjs");
 const prisma = new PrismaClient();
 
 async function main() {
-  const existing = await prisma.user.findFirst({
-    where: { role: "SUPERADMIN" },
-  });
+  const hashedPassword = await bcrypt.hash("EduTexAdmin@2026!#", 10);
 
-  if (existing) {
-    console.log("Superadmin already exists:", existing.email);
-    return;
-  }
-
-  const hashedPassword = await bcrypt.hash("admin123", 10);
-
-  const admin = await prisma.user.create({
-    data: {
-      name: "System Superadmin",
-      email: "admin@edutex.com",
+  const admin = await prisma.user.upsert({
+    where: { email: "superadmin@edutex.com" },
+    update: {
+      password: hashedPassword,
+      name: "EduTex Superadmin",
+    },
+    create: {
+      name: "EduTex Superadmin",
+      email: "superadmin@edutex.com",
       password: hashedPassword,
       role: "SUPERADMIN",
       status: "Approved",
     },
+  });
+
+  // Also handle the old 'admin@edutex.com' if it exists to avoid confusion
+  await prisma.user.deleteMany({
+    where: { 
+      email: "admin@edutex.com",
+      role: "SUPERADMIN"
+    }
   });
 
   console.log("Superadmin created successfully:", admin.email);

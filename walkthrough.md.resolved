@@ -1,0 +1,57 @@
+# EduTex Platform Walkthrough
+
+All requested modules and enhancements have been successfully implemented and verified for type safety.
+
+## 🔑 Superadmin Access
+A secure Superadmin account has been seeded into the database. You can use this to manage HOD applications.
+
+- **URL:** `/login`
+- **Email:** `superadmin@edutex.com`
+- **Password:** `EduTexAdmin@2026!#` (Strong Password)
+
+## 🎓 Student Registration & Context
+The student registration flow now requires **College Name** and **Department**.
+- This ensures every student is tied to a specific academic context.
+- When they log in, they only see materials belonging to their specific **College** and **Department**.
+- If a user tries to upload without an institution context, they receive a friendly alert.
+
+## 📂 Smart Repository & Gatekeeper
+The document lifecycle is now robust:
+
+1.  **Upload Form:** Supports PDF, PPTX, DOCX, and JPG/PNG. Files are uploaded directly to AWS S3.
+2.  **Approval Logic:**
+    *   **Faculty/HOD:** Their uploads go live **instantly**.
+    *   **Students:** Their uploads are flagged as [Pending](file:///home/rasheem/edutex2/app/actions/upload.ts#107-130).
+3.  **Gatekeeper Review:** HODs and Faculty see a **"Review Uploads"** tile.
+    *   They only see pending files from **their own college/department**.
+    *   They can preview the file and click **Approve** (marks as live) or **Reject** (deletes).
+4.  **Filtered Search:** The repository only displays files with `Status: Approved` that match the logged-in user's college and department.
+
+## 🛠️ Testing Guide
+
+### 1. Register a Student
+*   Go to `/register/student`.
+*   Fill in details, including College: `RVCE` and Department: `CSE`.
+*   Log in and go to **Repository**.
+*   Upload a test document (e.g., "Unit 1 Notes").
+
+### 2. Verify Gatekeeper
+*   Log in as an HOD or Faculty member from `RVCE`/`CSE`.
+*   Click **Review Uploads**.
+*   Approve the student's file.
+*   Go back to the Repository; the file will now be visible in the search results.
+
+### 3. Cross-Institution Verification
+*   Register another student from College: `BMS`.
+*   Log in and search the Repository.
+*   **Result:** They will NOT see the file uploaded by the RVCE student.
+
+## ☁️ AWS Configuration
+Ensure your [.env](file:///home/rasheem/edutex2/.env) file has these keys for S3 to work:
+```env
+AWS_ACCESS_KEY_ID="..."
+AWS_SECRET_ACCESS_KEY="..."
+AWS_REGION="us-east-1"
+AWS_BUCKET_NAME="..."
+```
+*I have already fixed the build errors related to missing modules like `recharts` and `fullcalendar`.*

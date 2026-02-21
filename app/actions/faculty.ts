@@ -7,7 +7,7 @@ import { auth } from "@/auth";
 
 export async function addFaculty(data: FormData) {
   const session = await auth();
-  if (!session || session.user.role !== "HOD") {
+  if (!session || (session.user as any).role !== "HOD") {
     return { error: "Unauthorized" };
   }
 

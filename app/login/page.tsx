@@ -32,7 +32,7 @@ export default function LoginPage() {
         router.push("/dashboard"); // Middleware will auto-redirect based on role
         router.refresh();
       } else {
-        setError(res.error || "Invalid credentials. Please try again.");
+        setError("Invalid credentials. Please try again.");
       }
     } catch (err: any) {
       setError("An unexpected error occurred.");

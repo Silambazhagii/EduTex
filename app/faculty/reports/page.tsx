@@ -17,8 +17,8 @@ export default function ReportsPage() {
   const { classes, attendance, assignments } = useDashboardStore();
 
   const totalStudents = classes.reduce((acc, curr) => acc + curr.students, 0);
-  const avgAttendance = attendance.length 
-    ? Math.round(attendance.reduce((acc, curr) => acc + curr.overallPercentage, 0) / attendance.length) 
+  const avgAttendance = attendance.length
+    ? Math.round(attendance.reduce((acc, curr) => acc + curr.overallPercentage, 0) / attendance.length)
     : 0;
   const assignmentsReviewed = assignments.filter(a => a.status === 'Reviewed').length;
 
@@ -40,7 +40,7 @@ export default function ReportsPage() {
             <Users className="w-6 h-6" />
           </div>
         </div>
-        
+
         <div className="bg-card border border-border/60 rounded-3xl p-6 shadow-sm flex items-center justify-between">
           <div>
             <p className="text-xs font-bold tracking-widest uppercase text-muted-foreground mb-1">Avg Attendance</p>
@@ -64,7 +64,7 @@ export default function ReportsPage() {
 
       {/* Charts Area */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        
+
         {/* Performance Area Chart */}
         <div className="bg-card border border-border/60 rounded-3xl p-6 shadow-sm flex flex-col min-h-[400px]">
           <h3 className="text-lg font-extrabold mb-6">Class Performance Trajectory</h3>
@@ -73,14 +73,14 @@ export default function ReportsPage() {
               <AreaChart data={performanceData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                 <defs>
                   <linearGradient id="colorAvg" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.3}/>
-                    <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0}/>
+                    <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.3} />
+                    <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0} />
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--border)/0.5)" />
                 <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fontSize: 12, fontWeight: 700 }} dy={10} />
                 <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 12, fontWeight: 700 }} />
-                <Tooltip 
+                <Tooltip
                   contentStyle={{ borderRadius: '16px', border: '1px solid hsl(var(--border))', backgroundColor: 'hsl(var(--card))', fontWeight: 700, fontSize: '13px' }}
                 />
                 <Area type="monotone" dataKey="average" stroke="hsl(var(--primary))" strokeWidth={4} fillOpacity={1} fill="url(#colorAvg)" />
@@ -101,7 +101,7 @@ export default function ReportsPage() {
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--border)/0.5)" />
                 <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 12, fontWeight: 700 }} dy={10} />
                 <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 12, fontWeight: 700 }} />
-                <Tooltip 
+                <Tooltip
                   cursor={{ fill: 'transparent' }}
                   contentStyle={{ borderRadius: '16px', border: '1px solid hsl(var(--border))', backgroundColor: 'hsl(var(--card))', fontWeight: 700, fontSize: '13px' }}
                 />

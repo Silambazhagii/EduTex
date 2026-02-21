@@ -124,26 +124,52 @@ export default function StudentRegisterPage() {
                         </select>
                     </div>
 
-                    <div className="space-y-1.5">
-                        <label className="text-xs font-bold tracking-wider uppercase text-muted-foreground ml-1">Email <span className="opacity-50">(Optional)</span></label>
-                        <input
-                            name="email"
-                            type="email"
-                            placeholder="john@example.com"
-                            className="w-full bg-background/50 border-2 border-border/80 rounded-xl px-4 py-3 text-sm font-bold focus:outline-none focus:ring-4 focus:ring-primary/10 transition-all placeholder:text-muted-foreground/40"
-                        />
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div className="space-y-1.5">
+                            <label className="text-xs font-bold tracking-wider uppercase text-muted-foreground ml-1">College Name</label>
+                            <input
+                                name="collegeName"
+                                type="text"
+                                placeholder="Ex. RV College of Engr"
+                                className="w-full bg-background/50 border-2 border-border/80 rounded-xl px-4 py-3 text-sm font-bold focus:outline-none focus:ring-4 focus:ring-primary/10 transition-all placeholder:text-muted-foreground/40"
+                                required
+                            />
+                        </div>
+
+                        <div className="space-y-1.5">
+                            <label className="text-xs font-bold tracking-wider uppercase text-muted-foreground ml-1">Department</label>
+                            <input
+                                name="department"
+                                type="text"
+                                placeholder="Ex. Computer Science"
+                                className="w-full bg-background/50 border-2 border-border/80 rounded-xl px-4 py-3 text-sm font-bold focus:outline-none focus:ring-4 focus:ring-primary/10 transition-all placeholder:text-muted-foreground/40"
+                                required
+                            />
+                        </div>
                     </div>
 
-                    <div className="space-y-1.5 pt-2">
-                        <label className="text-xs font-bold tracking-wider uppercase text-muted-foreground ml-1">Create Password</label>
-                        <input
-                            name="password"
-                            type="password"
-                            placeholder="••••••••"
-                            className="w-full bg-background/50 border-2 border-border/80 rounded-xl px-4 py-3 text-sm font-bold focus:outline-none focus:ring-4 focus:ring-primary/10 transition-all placeholder:text-muted-foreground/40"
-                            required
-                            minLength={6}
-                        />
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div className="space-y-1.5">
+                            <label className="text-xs font-bold tracking-wider uppercase text-muted-foreground ml-1">Email <span className="opacity-50">(Optional)</span></label>
+                            <input
+                                name="email"
+                                type="email"
+                                placeholder="john@example.com"
+                                className="w-full bg-background/50 border-2 border-border/80 rounded-xl px-4 py-3 text-sm font-bold focus:outline-none focus:ring-4 focus:ring-primary/10 transition-all placeholder:text-muted-foreground/40"
+                            />
+                        </div>
+
+                        <div className="space-y-1.5">
+                            <label className="text-xs font-bold tracking-wider uppercase text-muted-foreground ml-1">Create Password</label>
+                            <input
+                                name="password"
+                                type="password"
+                                placeholder="••••••••"
+                                className="w-full bg-background/50 border-2 border-border/80 rounded-xl px-4 py-3 text-sm font-bold focus:outline-none focus:ring-4 focus:ring-primary/10 transition-all placeholder:text-muted-foreground/40"
+                                required
+                                minLength={6}
+                            />
+                        </div>
                     </div>
 
                     <button

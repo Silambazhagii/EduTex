@@ -9,8 +9,10 @@ export async function registerStudent(data: FormData) {
   const semester = data.get("semester") as string;
   const email = (data.get("email") as string) || null;
   const password = data.get("password") as string;
+  const collegeName = data.get("collegeName") as string;
+  const department = data.get("department") as string;
 
-  if (!usn || !name || !semester || !password) {
+  if (!usn || !name || !semester || !password || !collegeName || !department) {
     return { error: "Missing required fields" };
   }
 
@@ -36,6 +38,8 @@ export async function registerStudent(data: FormData) {
         usn,
         semester,
         email,
+        collegeName,
+        department,
         password: hashedPassword,
         role: "STUDENT",
         status: "Approved", // Student goes live immediately 

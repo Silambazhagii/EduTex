@@ -31,6 +31,8 @@ model Document {
   semester    String
   subject     String
   unit        String
+  collegeName String?  // Optional to gracefully handle old data, required moving forward
+  department  String?  // Optional to gracefully handle old data, required moving forward
   status      String   @default("Pending") // "Pending", "Approved", "Rejected"
   uploaderId  String
   uploader    User     @relation(fields: [uploaderId], references: [id])

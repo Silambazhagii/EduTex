@@ -1,6 +1,6 @@
 // app/page.tsx - EduTex Admin: Full Reactive Dashboard
 'use client';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import {
   Bell, FileText, Users, Calendar, ClipboardCheck,
@@ -8,6 +8,7 @@ import {
   Plus, Eye, X, CheckCircle, XCircle, Clock, Upload,
   AlertCircle, ChevronRight, Lock
 } from 'lucide-react';
+import { getPendingDocuments, reviewDocument } from '@/app/actions/upload';
 
 interface Notice {
   id: number;
@@ -26,17 +27,6 @@ interface FacultyRequest {
   desc: string;
 }
 
-interface Upload {
-  id: number;
-  studentName: string;
-  fileName: string;
-  fileUrl: string;
-  fileType: string;
-  subject: string;
-  uploadedAt: string;
-  status: 'Pending' | 'Approved' | 'Rejected';
-}
-
 export default function EduTexAdminDashboard() {
   const router = useRouter();
 
@@ -51,27 +41,31 @@ export default function EduTexAdminDashboard() {
         url: 'https://drive.google.com/file/d/11SrEjfVbHN88uNUw4q3fH8NhECR9jgVt/preview',
         type: 'application/pdf',
       },
-    },
-    { id: 2, title: 'SOP Annual Day 2K26', body: 'New approval workflow is now live from Feb 18.', date: 'Feb 18' },
-    { id: 3, title: 'Timetable Update', body: 'Updated timetable published – check your schedule.', date: 'Feb 17' },
-    { id: 4, title: 'Exam Duty', body: 'Exam duty assignments published for March 2026.', date: 'Feb 16' },
+    }
   ]);
 
   const [requests, setRequests] = useState<FacultyRequest[]>([
     { id: 1, name: 'Prof. Priya Sharma', type: 'Leave Request', status: 'Pending', date: 'Feb 20 · 10:30 AM', desc: '3 days medical leave for family emergency' },
-    { id: 2, name: 'Dr. Rahul Mehta', type: 'Class Reschedule', status: 'Pending', date: 'Feb 19 · 2:15 PM', desc: 'Lab session moved to next Monday' },
-    { id: 3, name: 'Ms. Anjali Rao', type: 'Resource Request', status: 'Pending', date: 'Feb 18 · 9:00 AM', desc: 'Projector for seminar hall – Feb 22' },
-    { id: 4, name: 'Dr. Suresh Kumar', type: 'Leave Request', status: 'Pending', date: 'Feb 17 · 11:00 AM', desc: '1 day personal leave – Feb 21' },
-    { id: 5, name: 'Prof. Nisha Verma', type: 'Class Reschedule', status: 'Pending', date: 'Feb 16 · 4:00 PM', desc: 'Theory class moved to Thursday slot' },
   ]);
 
-  const [uploads, setUploads] = useState<Upload[]>([
-    { id: 1, studentName: 'Yaseen Mohammed', fileName: 'ML_Assignment_Unit3.pdf', fileUrl: '', fileType: 'application/pdf', subject: 'Machine Learning', uploadedAt: 'Feb 20 · 11:00 AM', status: 'Pending' },
-    { id: 2, studentName: 'Ayesha Siddiqui', fileName: 'DataStructures_Notes.pdf', fileUrl: '', fileType: 'application/pdf', subject: 'Data Structures', uploadedAt: 'Feb 20 · 9:45 AM', status: 'Pending' },
-    { id: 3, studentName: 'Rohan Patel', fileName: 'random_meme.png', fileUrl: '', fileType: 'image/png', subject: 'Computer Networks', uploadedAt: 'Feb 19 · 3:20 PM', status: 'Pending' },
-    { id: 4, studentName: 'Sneha Kulkarni', fileName: 'OS_Lab_Report.pdf', fileUrl: '', fileType: 'application/pdf', subject: 'Operating Systems', uploadedAt: 'Feb 18 · 1:10 PM', status: 'Approved' },
-    { id: 5, studentName: 'Aditya Nair', fileName: 'Spam_File_123.pdf', fileUrl: '', fileType: 'application/pdf', subject: 'Unknown', uploadedAt: 'Feb 17 · 5:00 PM', status: 'Rejected' },
-  ]);
+  const [uploads, setUploads] = useState<any[]>([]);
+  const [loadingUploads, setLoadingUploads] = useState(true);
+
+  // Fetch Pending Documents
+  useEffect(() => {
+    const fetchUploads = async () => {
+      setLoadingUploads(true);
+      try {
+        const pendingDocs = await getPendingDocuments();
+        setUploads(pendingDocs);
+      } catch (err) {
+        console.error("Failed to fetch pending uploads:", err);
+      } finally {
+        setLoadingUploads(false);
+      }
+    };
+    fetchUploads();
+  }, []);
 
   const [activeTab, setActiveTab] = useState<'requests' | 'uploads'>('requests');
   const [showAddModal, setShowAddModal] = useState(false);
@@ -81,7 +75,7 @@ export default function EduTexAdminDashboard() {
   const [newFile, setNewFile] = useState<File | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
   const [viewNotice, setViewNotice] = useState<Notice | null>(null);
-  const [viewUpload, setViewUpload] = useState<Upload | null>(null);
+  const [viewUpload, setViewUpload] = useState<any | null>(null);
 
   const shortcuts = [
     { label: 'Add Faculty', icon: <Users size={18} />, action: () => setShowFacultyModal(true) },
@@ -95,8 +89,18 @@ export default function EduTexAdminDashboard() {
   const handleRequestAction = (id: number, action: 'Approved' | 'Rejected') =>
     setRequests(prev => prev.map(r => r.id === id ? { ...r, status: action } : r));
 
-  const handleUploadAction = (id: number, action: 'Approved' | 'Rejected') =>
-    setUploads(prev => prev.map(u => u.id === id ? { ...u, status: action } : u));
+  const handleUploadAction = async (id: string, action: 'Approve' | 'Reject') => {
+    try {
+      // Optimistic update
+      setUploads(prev => prev.map(u => u.id === id ? { ...u, status: action === 'Approve' ? 'Approved' : 'Rejected' } : u));
+      await reviewDocument(id, action);
+    } catch (e) {
+      console.error(e);
+      // Fallback: reload fetch
+      const pendingDocs = await getPendingDocuments();
+      setUploads(pendingDocs);
+    }
+  };
 
   const handleAddNotice = () => {
     if (!newTitle.trim() || !newBody.trim()) return;
@@ -160,8 +164,8 @@ export default function EduTexAdminDashboard() {
               <button
                 onClick={() => setActiveTab('requests')}
                 className={`flex items-center gap-2 px-4 py-2 rounded-xl font-bold text-sm transition-all ${activeTab === 'requests'
-                    ? 'bg-primary text-primary-foreground shadow-md'
-                    : 'bg-secondary text-secondary-foreground hover:bg-muted'
+                  ? 'bg-primary text-primary-foreground shadow-md'
+                  : 'bg-secondary text-secondary-foreground hover:bg-muted'
                   }`}
               >
                 <Users size={14} />
@@ -176,8 +180,8 @@ export default function EduTexAdminDashboard() {
               <button
                 onClick={() => setActiveTab('uploads')}
                 className={`flex items-center gap-2 px-4 py-2 rounded-xl font-bold text-sm transition-all ${activeTab === 'uploads'
-                    ? 'bg-primary text-primary-foreground shadow-md'
-                    : 'bg-secondary text-secondary-foreground hover:bg-muted'
+                  ? 'bg-primary text-primary-foreground shadow-md'
+                  : 'bg-secondary text-secondary-foreground hover:bg-muted'
                   }`}
               >
                 <FileText size={14} />
@@ -286,13 +290,13 @@ export default function EduTexAdminDashboard() {
                     <div className="flex flex-col sm:flex-row gap-2">
                       {u.status === 'Pending' && (
                         <>
-                          <button onClick={() => handleUploadAction(u.id, 'Approved')} className="flex-1 flex items-center justify-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground py-3 px-4 rounded-xl font-semibold text-sm transition-all shadow-md">
+                          <button onClick={() => handleUploadAction(u.id, 'Approve')} className="flex-1 flex items-center justify-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground py-3 px-4 rounded-xl font-semibold text-sm transition-all shadow-md">
                             <CheckCircle size={15} /> Approve & Publish
                           </button>
                           <button onClick={() => setViewUpload(u)} className="flex-1 flex items-center justify-center gap-2 bg-secondary hover:bg-muted text-secondary-foreground py-3 px-4 rounded-xl font-semibold text-sm transition-all">
                             <Eye size={15} /> View File
                           </button>
-                          <button onClick={() => handleUploadAction(u.id, 'Rejected')} className="flex-1 flex items-center justify-center gap-2 bg-destructive/10 hover:bg-destructive/20 text-destructive py-3 px-4 rounded-xl font-semibold text-sm transition-all border border-destructive/20">
+                          <button onClick={() => handleUploadAction(u.id, 'Reject')} className="flex-1 flex items-center justify-center gap-2 bg-destructive/10 hover:bg-destructive/20 text-destructive py-3 px-4 rounded-xl font-semibold text-sm transition-all border border-destructive/20">
                             <XCircle size={15} /> Reject
                           </button>
                         </>
@@ -303,7 +307,7 @@ export default function EduTexAdminDashboard() {
                             <CheckCircle size={15} className="text-primary shrink-0" />
                             <span className="text-primary text-sm font-semibold">Published — visible in search results</span>
                           </div>
-                          <button onClick={() => handleUploadAction(u.id, 'Rejected')} className="flex items-center gap-1.5 bg-destructive/10 hover:bg-destructive/20 text-destructive px-4 py-3 rounded-xl font-semibold text-sm transition-all border border-destructive/20">
+                          <button onClick={() => handleUploadAction(u.id, 'Reject')} className="flex items-center gap-1.5 bg-destructive/10 hover:bg-destructive/20 text-destructive px-4 py-3 rounded-xl font-semibold text-sm transition-all border border-destructive/20">
                             <X size={13} /> Undo
                           </button>
                         </div>
@@ -314,7 +318,7 @@ export default function EduTexAdminDashboard() {
                             <XCircle size={15} className="text-destructive shrink-0" />
                             <span className="text-destructive text-sm font-semibold">Rejected — not visible to students</span>
                           </div>
-                          <button onClick={() => handleUploadAction(u.id, 'Approved')} className="flex items-center gap-1.5 bg-primary/10 hover:bg-primary/20 text-primary px-4 py-3 rounded-xl font-semibold text-sm transition-all border border-primary/20">
+                          <button onClick={() => handleUploadAction(u.id, 'Approve')} className="flex items-center gap-1.5 bg-primary/10 hover:bg-primary/20 text-primary px-4 py-3 rounded-xl font-semibold text-sm transition-all border border-primary/20">
                             <ChevronRight size={13} /> Undo
                           </button>
                         </div>
@@ -536,13 +540,13 @@ export default function EduTexAdminDashboard() {
               </div>
               <div className="flex items-center gap-2 shrink-0">
                 <button
-                  onClick={() => { handleUploadAction(viewUpload.id, 'Approved'); setViewUpload(null); }}
+                  onClick={() => { handleUploadAction(viewUpload.id, 'Approve'); setViewUpload(null); }}
                   className="flex items-center gap-1.5 bg-primary hover:bg-primary/90 text-primary-foreground px-4 py-2 rounded-xl font-bold text-sm shadow-md transition-all"
                 >
                   <CheckCircle size={14} /> Approve
                 </button>
                 <button
-                  onClick={() => { handleUploadAction(viewUpload.id, 'Rejected'); setViewUpload(null); }}
+                  onClick={() => { handleUploadAction(viewUpload.id, 'Reject'); setViewUpload(null); }}
                   className="flex items-center gap-1.5 bg-destructive/10 hover:bg-destructive/20 text-destructive px-4 py-2 rounded-xl font-bold text-sm border border-destructive/20 transition-all"
                 >
                   <XCircle size={14} /> Reject

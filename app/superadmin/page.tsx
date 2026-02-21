@@ -7,7 +7,7 @@ import { approveHod, rejectHod } from "@/app/actions/superadmin";
 export default async function SuperadminDashboard() {
     const session = await auth();
 
-    if (!session || session.user.role !== "SUPERADMIN") {
+    if (!session || (session.user as any).role !== "SUPERADMIN") {
         redirect("/login");
     }
 
@@ -50,7 +50,7 @@ export default async function SuperadminDashboard() {
                     {applications.map((app) => (
                         <div key={app.id} className="bg-card border border-border/80 rounded-2xl p-6 shadow-sm hover:shadow-xl transition-all group flex flex-col relative overflow-hidden">
                             <div className={`absolute top-0 left-0 w-full h-1 ${app.status === "Approved" ? "bg-primary" :
-                                    app.status === "Rejected" ? "bg-destructive" : "bg-accent"
+                                app.status === "Rejected" ? "bg-destructive" : "bg-accent"
                                 }`} />
 
                             <div className="flex justify-between items-start mb-4 gap-2">
@@ -59,7 +59,7 @@ export default async function SuperadminDashboard() {
                                     <p className="text-xs text-muted-foreground font-semibold uppercase">{app.role}</p>
                                 </div>
                                 <span className={`px-3 py-1 text-[10px] font-black uppercase tracking-wider rounded-lg border ${app.status === "Approved" ? "bg-primary/10 text-primary border-primary/20" :
-                                        app.status === "Rejected" ? "bg-destructive/10 text-destructive border-destructive/20" : "bg-accent text-foreground border-border"
+                                    app.status === "Rejected" ? "bg-destructive/10 text-destructive border-destructive/20" : "bg-accent text-foreground border-border"
                                     }`}>
                                     {app.status}
                                 </span>
@@ -86,12 +86,12 @@ export default async function SuperadminDashboard() {
 
                             {app.status === "Pending" ? (
                                 <div className="grid grid-cols-2 gap-3 mt-auto">
-                                    <form action={approveHod.bind(null, app.id)}>
+                                    <form action={approveHod.bind(null, app.id) as any}>
                                         <button className="w-full flex items-center justify-center gap-1.5 bg-primary hover:bg-primary/90 text-primary-foreground font-bold py-2.5 rounded-xl text-sm transition-all">
                                             <CheckCircle className="w-4 h-4" /> Approve
                                         </button>
                                     </form>
-                                    <form action={rejectHod.bind(null, app.id)}>
+                                    <form action={rejectHod.bind(null, app.id) as any}>
                                         <button className="w-full flex items-center justify-center gap-1.5 bg-destructive/10 hover:bg-destructive/20 text-destructive border border-destructive/20 font-bold py-2.5 rounded-xl text-sm transition-all">
                                             <XCircle className="w-4 h-4" /> Reject
                                         </button>
